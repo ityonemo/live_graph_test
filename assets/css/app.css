@@ -1,0 +1,21 @@
+/* This file is for your main application css. */
+
+@import "./phoenix.css";
+
+rect.bound-box {
+    fill:none;
+    stroke:#000000;
+    stroke-width:1;
+    stroke-opacity:1
+  }
+  
+g.graphs {
+  fill:none;
+  stroke:#000000;
+  stroke-width:1;
+  stroke-opacity:1
+}
+
+.left-column {
+    width: 30%
+}

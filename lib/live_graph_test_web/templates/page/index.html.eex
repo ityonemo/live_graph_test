@@ -1,0 +1,2 @@
+<h1>Test Graph</h1>
+<%= Phoenix.LiveView.live_render(@conn, LiveGraphTestWeb.TestGraph) %>
