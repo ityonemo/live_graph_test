@@ -16,6 +16,10 @@ g.graphs {
   stroke-opacity:1
 }
 
-.left-column {
-    width: 30%
+.column {
+  display: table-cell
+}
+
+form input#x-span{
+  width: 75%
 }
