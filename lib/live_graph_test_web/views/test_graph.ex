@@ -43,7 +43,8 @@ defmodule LiveGraphTestWeb.TestGraph do
           <%= for {{x1, y1}, {x2, y2}} <- @points do %>
             <path class="graph-line"
               id="<%= name(x1,y1,x2,y2) %>"
-              d="M <%= x1 %>,<%= y1 %> L <%= x2 %>,<%= y2 %>"/>
+              d="M <%= x1 %>,<%= y1 %> L <%= x2 %>,<%= y2 %>"
+              vector-effect="non-scaling-stroke"/>
           <% end %>
         </g>
       </g>
@@ -59,19 +60,27 @@ defmodule LiveGraphTestWeb.TestGraph do
       <label for="height">height</label>
       <input type="number" name="height" id="height" value="<%= height %>"><br>
     </form>
-    <form action="#" phx-submit="margin">
-      <label for="margin">margin</label>
-      <input type="number" name="margin" id="margin" value="<%= margin %>"><br>
-    </form>
     </div>
 
     <div class="column">
     <h2> X-Axis Settings </h2>
     <form action="#" submit="">
-      <input type="radio" phx-click="x_span_auto" <%= if @x_span == :auto, do: "checked" %>>
+      <input type="radio" phx-click="x_span_auto" <%= if @x_span_auto, do: "checked" %>>
         auto<br>
-      <input type="radio" <%= unless @x_span == :auto, do: "checked" %>>
-        <input id="x-span" type="number" value="<%= @x_span %>" phx-keydown="x_span">
+      <input type="radio" phx-click="x_span_fixed" <%= unless @x_span_auto, do: "checked" %>>
+        fixed<br>
+      <input id="x-span" type="number" value="<%= @x_span %>" phx-keydown="x_span">
+    </form>
+    </div>
+
+    <div class="column">
+    <h2> Y-Axis Settings </h2>
+    <form action="#" submit="">
+      <input type="radio" phx-click="y_span_auto" <%= if @y_span_auto, do: "checked" %>>
+        auto<br>
+      <input type="radio" phx-click="y_span_fixed" <%= unless @y_span_auto, do: "checked" %>>
+        fixed<br>
+      <input id="y-span" type="number" value="<%= @y_span %>" phx-keydown="y_span">
     </form>
     </div>
     """
@@ -86,7 +95,10 @@ defmodule LiveGraphTestWeb.TestGraph do
       last: {0, Enum.random(0..200)},
       width: 520,
       height: 240,
-      x_span: 520)
+      x_span_auto: false,
+      x_span: 500,
+      y_span_auto: false,
+      y_span: 220)
     {:ok, socket, temporary_assigns: [points: []]}
   end
 
@@ -108,11 +120,22 @@ defmodule LiveGraphTestWeb.TestGraph do
     {:noreply, assign(socket, height: String.to_integer(height))}
   end
   def handle_event("x_span_auto", _, socket) do
-    socket |> IO.inspect(label: "103")
-    {:noreply, assign(socket, x_span: :auto)}
+    {:noreply, assign(socket, x_span_auto: true)}
+  end
+  def handle_event("x_span_fixed", _, socket) do
+    {:noreply, assign(socket, x_span_auto: false)}
   end
   def handle_event("x_span", %{"code" => "Enter", "value" => v}, socket) do
     {:noreply, assign(socket, x_span: String.to_integer(v))}
+  end
+  def handle_event("y_span_auto", _, socket) do
+    {:noreply, assign(socket, y_span_auto: true)}
+  end
+  def handle_event("y_span_fixed", _, socket) do
+    {:noreply, assign(socket, y_span_auto: false)}
+  end
+  def handle_event("y_span", %{"code" => "Enter", "value" => v}, socket) do
+    {:noreply, assign(socket, y_span: String.to_integer(v))}
   end
   def handle_event(_, _, socket) do
     {:noreply, socket}
